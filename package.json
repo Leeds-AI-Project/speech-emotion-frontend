@@ -13,7 +13,13 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@capacitor-community/media": "^6.0.0",
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
+    "@vant/compat": "^1",
+    "cordova-plugin-media": "^7.0.0",
     "pinia": "^2.1.7",
+    "vant": "^4",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
