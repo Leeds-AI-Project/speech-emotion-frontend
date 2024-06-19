@@ -1,7 +1,14 @@
 
 <template>
+    <div style="margin: 0 auto;text-align: center">
+
     <UpLoader></UpLoader>
+        <hr>
+        <hr>
     <VoiceRecorder></VoiceRecorder>
+
+    </div>
+
 </template>
 
 <script>
