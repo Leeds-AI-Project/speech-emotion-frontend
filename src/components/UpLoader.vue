@@ -1,7 +1,7 @@
 <template>
     <div class="upload-container">
         <!-- 自定义上传区域，点击时触发文件选择框 -->
-        <div class="custom-uploader" @click="triggerFileInput">
+        <div class="custom-uploader" @click="triggerFileInput" style="margin-top:50px;margin-bottom:50px">
             <input
                 ref="fileInput"
                 type="file"
@@ -16,9 +16,10 @@
         <div v-if="audioUrl" style="text-align: center; margin-top: 20px;">
             <audio :src="audioUrl" controls></audio>
         </div>
-        <div style="transform: translate(50%,50%) ;position:absolute;bottom:80px;width:50%">
-            <van-button type="primary" @click="uploadAudio" :disabled="fileList.length === 0">分析音频文件</van-button>
-        </div>
+
+    </div>
+    <div style="transform: translate(50%,50%) ;position:absolute;bottom:80px;width:50%">
+        <van-button type="primary" @click="uploadAudio" :disabled="fileList.length === 0">分析音频</van-button>
     </div>
 </template>
 
@@ -139,7 +140,7 @@ export default {
     background-size: 150px 150px;
     background-repeat: no-repeat;
     background-position: center;
-    margin: 20px auto;
+    margin: 50px auto;
     width: 150px;
     height: 150px;
     border: 2px dashed #ccc;
