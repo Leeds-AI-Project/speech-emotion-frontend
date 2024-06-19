@@ -1,9 +1,11 @@
 <template>
-    <img src="../assets/imgs/microphone.jpg" alt="microphone" style="width:150px;height:150px;margin:50px;">
+    <img src="../assets/imgs/microphone.jpg" alt="microphone" style="width:200px;height:200px;margin:50px;">
     <div class="voice-recorder">
 
-        <van-button type="primary" @click="startRecording" :disabled="isRecording" style="margin-right: 20px; " >开始录音</van-button>
+        <van-button type="primary" @click="startRecording" :disabled="isRecording"  >开始录音</van-button>
         <van-button plain type="primary" @click="stopRecording" :disabled="!isRecording">结束录音</van-button>
+        <van-button  type="primary" :disabled="!audioUrl" round icon="guide-o"></van-button>
+
     </div>
     <div v-if="isRecording" style="text-align: center; margin-top: 20px;">
         <van-divider>录音时间</van-divider>
@@ -12,9 +14,7 @@
     <div v-if="audioUrl&&!isRecording" style="text-align: center;margin-top:20px;">
         <audio :src="audioUrl" controls></audio>
     </div>
-    <div style="transform: translate(50%,50%) ;position:absolute;bottom:80px;width:50%">
-        <van-button type="primary" :disabled="!audioUrl" >分析录音</van-button>
-    </div>
+
 </template>
 
 <script>
@@ -93,10 +93,11 @@ export default {
 
 <style scoped>
 .voice-recorder {
-    margin: 0 auto;
+    margin: 30px auto;
     padding: 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     text-align: center;
+
 }
 </style>
