@@ -1,124 +1,77 @@
 <template>
     <div class="voice-recorder">
-        <van-button type="primary" @click="startRecording" :disabled="isRecording" style="margin-right: 20px;">开始录音</van-button>
+        <van-button type="primary" @click="startRecording" :disabled="isRecording" style="margin-right: 20px; " >开始录音</van-button>
         <van-button plain type="primary" @click="stopRecording" :disabled="!isRecording">结束录音</van-button>
-
     </div>
-    <div v-if="isRecording">
+    <div v-if="isRecording" style="text-align: center; margin-top: 20px;">
         <van-divider>录音时间</van-divider>
-        <div>{{ formatTime(recordingTime) }}</div>
+        <div style="color:black">{{ formatTime(recordingTime) }}</div>
     </div>
     <div v-if="audioUrl" style="text-align: center;">
-        <van-divider>录音预览</van-divider>
         <audio :src="audioUrl" controls></audio>
-
-        <van-button type="primary" @click="uploadAudio">上传录音</van-button>
+    </div>
+    <div style="margin: 10px;">
+        <van-button type="primary" >上传音频</van-button>
     </div>
 </template>
 
 <script>
-import { Filesystem, FilesystemDirectory, FilesystemEncoding } from '@capacitor/filesystem';
-import { Http } from '@capacitor-community/http';
+import { VoiceRecorder } from 'capacitor-voice-recorder';
 
 export default {
-    name: 'VoiceRecorder',
+    name: 'VoiceRecorderComponent',
     data() {
         return {
             isRecording: false,
-            audioUrl: null,
-            mediaRecorder: null,
             recordingTime: 0,
-            recordingInterval:null,
-            audioChunks: [],
-            audioFile: null,
+            recordingInterval: null,
+            audioUrl: null,
         };
     },
     methods: {
         async startRecording() {
-            this.isRecording = true;
-            this.audioChunks = [];
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                this.mediaRecorder = new MediaRecorder(stream);
-                this.mediaRecorder.ondataavailable = (event) => {
-                    this.audioChunks.push(event.data);
-                };
-                this.mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-                    this.audioUrl = URL.createObjectURL(audioBlob);
-
-                    // Save the audio file
-                    const base64Data = await this.convertBlobToBase64(audioBlob);
-                    const result = await Filesystem.writeFile({
-                        path: 'recording.wav',
-                        data: base64Data,
-                        directory: FilesystemDirectory.Data,
-                        encoding: FilesystemEncoding.UTF8
-                    });
-                    this.audioFile = result.uri;
-                };
-                this.mediaRecorder.start();
-                this.recordingInterval = setInterval(() => {
-                    this.recordingTime++;
-                }, 1000);
+                await VoiceRecorder.requestAudioRecordingPermission();
+                const result = await VoiceRecorder.startRecording();
+                if (result.value) {
+                    this.isRecording = true;
+                    this.recordingTime = 0;
+                    this.startTimer();
+                } else {
+                    console.error('Failed to start recording');
+                }
             } catch (error) {
-                console.error('Error accessing microphone', error);
-                this.isRecording = false;
+                console.error('Error starting recording:', error);
             }
         },
-
-        stopRecording() {
-            this.isRecording = false;
-            clearInterval(this.recordingInterval);
-            if (this.mediaRecorder) {
-                this.mediaRecorder.stop();
+        async stopRecording() {
+            try {
+                const result = await VoiceRecorder.stopRecording();
+                if (result.value.recordDataBase64) {
+                    const audioBlob = this.base64ToBlob(result.value.recordDataBase64, 'audio/aac');
+                    this.audioUrl = URL.createObjectURL(audioBlob);
+                }
+                this.isRecording = false;
+                this.stopTimer();
+            } catch (error) {
+                console.error('Error stopping recording:', error);
             }
+        },
+        startTimer() {
+            this.recordingInterval = setInterval(() => {
+                this.recordingTime++;
+            }, 1000);
+        },
+        stopTimer() {
+            clearInterval(this.recordingInterval);
+            this.recordingInterval = null;
         },
         formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = seconds % 60;
             return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
         },
-        async convertBlobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    resolve(reader.result.split(',')[1]);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        },
-        async uploadAudio() {
-            if (!this.audioFile) {
-                alert('No audio recorded yet!');
-                return;
-            }
-
-            try {
-                const file = await Filesystem.readFile({
-                    path: this.audioFile,
-                    directory: FilesystemDirectory.Data,
-                    encoding: FilesystemEncoding.UTF8
-                });
-
-                const formData = new FormData();
-                formData.append('file', this.base64ToBlob(file.data), 'recording.wav');
-
-                const response = await Http.post({
-                    url: 'YOUR_UPLOAD_URL',
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    data: formData
-                });
-
-                console.log('File uploaded successfully:', response);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
-        },
-        base64ToBlob(base64, type = 'audio/wav') {
+        base64ToBlob(base64, type) {
             const byteCharacters = atob(base64);
             const byteArrays = [];
             for (let offset = 0; offset < byteCharacters.length; offset += 512) {
@@ -131,8 +84,8 @@ export default {
                 byteArrays.push(byteArray);
             }
             return new Blob(byteArrays, { type });
-        }
-    }
+        },
+    },
 };
 </script>
 

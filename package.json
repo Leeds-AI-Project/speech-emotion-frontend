@@ -21,6 +21,7 @@
     "@capacitor/filesystem": "^6.0.0",
     "@capacitor/ios": "^6.1.0",
     "@vant/compat": "^1",
+    "capacitor-voice-recorder": "^5.0.0",
     "cordova-plugin-file": "^8.0.0",
     "cordova-plugin-media": "^7.0.0",
     "pinia": "^2.1.7",
