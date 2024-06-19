@@ -64,7 +64,7 @@ body {
     line-height: 0px;
 }
 .my-swipe{
-    height:520px;
+    height:600px;
 
 }
 </style>
