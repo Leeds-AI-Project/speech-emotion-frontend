@@ -14,12 +14,12 @@
         <span class="myfilename" style="height:50px;font-size:15px;color:black">{{ filename }}</span>
 
         <div v-if="audioUrl" style="text-align: center; margin-top: 20px;">
-            <audio :src="audioUrl" controls></audio>
+            <audio :src="audioUrl" controls style="width:90%"></audio>
         </div>
 
     </div>
     <div style="transform: translate(50%,50%) ;position:absolute;bottom:80px;width:50%">
-        <van-button type="primary" @click="uploadAudio" :disabled="fileList.length === 0">分析音频</van-button>
+        <van-button type="primary" @click="uploadAudio" :disabled="fileList.length === 0" round icon="guide-o"></van-button>
     </div>
 </template>
 
@@ -137,12 +137,12 @@ export default {
 }
 .custom-uploader {
     background: url('../assets/imgs/upload_music.png');
-    background-size: 150px 150px;
+    background-size: 200px 200px;
     background-repeat: no-repeat;
     background-position: center;
     margin: 50px auto;
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     border: 2px dashed #ccc;
     border-radius: 4px;
     display: flex;
