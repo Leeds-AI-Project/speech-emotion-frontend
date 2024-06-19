@@ -5,10 +5,11 @@
 
     <van-swipe class="my-swipe" indicator-color="grey">
         <van-swipe-item>
-            <UpLoader></UpLoader>
+            <VoiceRecorder></VoiceRecorder>
+
         </van-swipe-item>
         <van-swipe-item>
-            <VoiceRecorder></VoiceRecorder>
+            <UpLoader></UpLoader>
         </van-swipe-item>
     </van-swipe>
 

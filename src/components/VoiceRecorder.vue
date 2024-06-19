@@ -1,5 +1,7 @@
 <template>
+    <img src="../assets/imgs/microphone.jpg" alt="microphone" style="width:150px;height:150px;margin:20px;">
     <div class="voice-recorder">
+
         <van-button type="primary" @click="startRecording" :disabled="isRecording" style="margin-right: 20px; " >开始录音</van-button>
         <van-button plain type="primary" @click="stopRecording" :disabled="!isRecording">结束录音</van-button>
     </div>
@@ -7,11 +9,11 @@
         <van-divider>录音时间</van-divider>
         <div style="color:black">{{ formatTime(recordingTime) }}</div>
     </div>
-    <div v-if="audioUrl" style="text-align: center;">
+    <div v-if="audioUrl" style="text-align: center;margin-top:20px;">
         <audio :src="audioUrl" controls></audio>
     </div>
-    <div style="margin: 10px;">
-        <van-button type="primary" >上传音频</van-button>
+    <div style="transform: translate(50%,50%) ;position:absolute;bottom:80px;width:50%">
+        <van-button type="primary" >分析录音</van-button>
     </div>
 </template>
 

@@ -16,8 +16,8 @@
         <div v-if="audioUrl" style="text-align: center; margin-top: 20px;">
             <audio :src="audioUrl" controls></audio>
         </div>
-        <div style="margin: 10px;">
-            <van-button type="primary" @click="uploadAudio" :disabled="fileList.length === 0">上传音频</van-button>
+        <div style="transform: translate(50%,50%) ;position:absolute;bottom:80px;width:50%">
+            <van-button type="primary" @click="uploadAudio" :disabled="fileList.length === 0">分析音频文件</van-button>
         </div>
     </div>
 </template>
@@ -44,7 +44,7 @@ export default {
             console.log(this.fileList.length)
             if (this.fileList.length == 0) {
                 console.log('hhh')
-                return '未选择音频文件';
+                return '未上传音频';
             }
             console.log('name',this.fileList[0].name)
             return this.fileList[0].name;
@@ -136,12 +136,12 @@ export default {
 }
 .custom-uploader {
     background: url('../assets/imgs/upload_music.png');
-    background-size: 80px 80px;
+    background-size: 150px 150px;
     background-repeat: no-repeat;
     background-position: center;
     margin: 20px auto;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border: 2px dashed #ccc;
     border-radius: 4px;
     display: flex;
@@ -156,10 +156,9 @@ export default {
     display: inline-block;
     line-height:50px;
 
-    border: 4px solid #d3b4f5;
     border-radius: 5px;
-    background-color: #f0e6ff;
-    color:white;
+
+
     position: relative;
     z-index: 0;
 }
