@@ -51,9 +51,9 @@ const filename = computed(() => {
   if (fileList.value.length === 0) {
     console.log('hhh')
     return '未上传音频'
+  } else {
+    return fileList.value[0].name
   }
-  console.log('name', fileList.value[0].name)
-  return fileList.value[0].name
 })
 
 const fileInput = ref()

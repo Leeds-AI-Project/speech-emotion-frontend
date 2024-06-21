@@ -12,7 +12,13 @@
       <van-button plain type="primary" @click="stopRecording" :disabled="!isRecording"
         >结束录音</van-button
       >
-      <van-button type="primary" :disabled="!audioUrl" round icon="guide-o"></van-button>
+      <van-button
+        type="primary"
+        :disabled="!audioUrl"
+        round
+        icon="guide-o"
+        @click="uploadAudio"
+      ></van-button>
     </div>
     <div v-if="isRecording" style="text-align: center; margin-top: 20px; margin-bottom: 30px">
       <van-divider>录音时间</van-divider>
@@ -21,12 +27,14 @@
     <div v-if="audioUrl && !isRecording" style="text-align: center; margin-top: 20px">
       <audio :src="audioUrl" controls></audio>
     </div>
+    <div style="color: black; margin-top: 30px">{{ result }}</div>
   </div>
 </template>
 
 <script>
 import { VoiceRecorder } from 'capacitor-voice-recorder'
-
+import { closeToast, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import axios from 'axios'
 export default {
   name: 'VoiceRecorderComponent',
   data() {
@@ -34,7 +42,8 @@ export default {
       isRecording: false,
       recordingTime: 0,
       recordingInterval: null,
-      audioUrl: null
+      audioUrl: null,
+      result: '暂无结果'
     }
   },
   methods: {
@@ -64,6 +73,40 @@ export default {
         this.stopTimer()
       } catch (error) {
         console.error('Error stopping recording:', error)
+      }
+    },
+    async uploadAudio() {
+      if (!this.audioUrl) {
+        alert('没有录音可上传')
+        return
+      }
+
+      try {
+        const audioBlob = await fetch(this.audioUrl).then((r) => r.blob())
+        const formData = new FormData()
+        formData.append('file', audioBlob, 'recording.wav') // 可以根据你的需求修改文件名和格式
+        showLoadingToast({
+          message: '评估中',
+          duration: 0,
+          forbidClick: true
+        })
+        // 修改URL为你的上传接口地址
+        const response = await axios.post('http://127.0.0.1:5000/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+
+        closeToast()
+        if (response.status === 200) {
+          showSuccessToast('评估完成')
+          this.result = response.data
+        } else {
+          showFailToast('文件上传失败')
+        }
+      } catch (error) {
+        console.error('上传出错:', error)
+        alert('上传出错：' + error.message)
       }
     },
     startTimer() {
