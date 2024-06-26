@@ -4,20 +4,20 @@
       <!-- 自定义上传区域，点击时触发文件选择框 -->
       <div
         class="custom-uploader"
+        style="margin-top: 10px; margin-bottom: 20px"
         @click="triggerFileInput"
-        style="margin-top: 50px; margin-bottom: 50px"
       >
         <input
           ref="fileInput"
-          type="file"
           accept="audio/*"
-          @change="handleFileChange"
           style="display: none"
+          type="file"
+          @change="handleFileChange"
         />
       </div>
       <span class="myfilename" style="height: 50px; font-size: 15px; color: black">{{
-        filename
-      }}</span>
+          filename
+        }}</span>
 
       <div v-if="audioUrl" style="text-align: center; margin-top: 20px">
         <audio :src="audioUrl" controls style="width: 90%"></audio>
@@ -25,21 +25,21 @@
     </div>
 
     <van-button
+      :disabled="fileList.length === 0"
+      icon="guide-o"
+      round
+      style="margin: 20px 0 30px 0"
       type="primary"
       @click="uploadAudio"
-      :disabled="fileList.length === 0"
-      round
-      icon="guide-o"
-      style="margin: 20px 0 30px 0"
     ></van-button>
     <div style="color: black">{{ result }}</div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Filesystem, FilesystemDirectory } from '@capacitor/filesystem'
 import { Http } from '@capacitor-community/http'
-import { showToast, showFailToast, showLoadingToast, closeToast, showSuccessToast } from 'vant'
+import { closeToast, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { computed, ref } from 'vue'
 import { base64ToBlob } from '@/utils'
 
@@ -105,7 +105,7 @@ const uploadAudio = async () => {
         forbidClick: true
       })
       const response = await Http.post({
-        url: 'http://127.0.0.1:5000/api/upload',
+        url: 'http://localhost:5000/api/upload',
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -136,12 +136,13 @@ export default {
   padding: 16px;
   text-align: center;
 }
+
 .custom-uploader {
   background: url('../assets/imgs/upload_music.png');
-  background-size: 200px 200px;
+  background-size: 150px 150px;
   background-repeat: no-repeat;
   background-position: center;
-  margin: 50px auto;
+  margin: 10px auto;
   width: 200px;
   height: 200px;
   border: 2px dashed #ccc;
@@ -153,6 +154,7 @@ export default {
   cursor: pointer;
   position: relative;
 }
+
 .myfilename {
   width: 200px;
   display: inline-block;
@@ -161,6 +163,7 @@ export default {
   position: relative;
   z-index: 0;
 }
+
 :deep(.my-swipe .van-swipe-item[data-v-cc12edcf]) {
   line-height: 0px !important;
 }

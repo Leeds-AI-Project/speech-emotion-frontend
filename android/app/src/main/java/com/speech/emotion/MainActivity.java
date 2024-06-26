@@ -1,0 +1,5 @@
+package com.speech.emotion;
+
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {}

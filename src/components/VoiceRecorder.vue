@@ -1,22 +1,24 @@
 <template>
   <div>
     <img
-      src="../assets/imgs/microphone.jpg"
       alt="microphone"
+      src="../assets/imgs/microphone.jpg"
       style="width: 200px; height: 200px; margin: 30px"
     />
     <div class="voice-recorder">
-      <van-button type="primary" @click="startRecording" :disabled="isRecording"
-        >开始录音</van-button
+      <van-button :disabled="isRecording" type="primary" @click="startRecording"
+      >开始录音
+      </van-button
       >
-      <van-button plain type="primary" @click="stopRecording" :disabled="!isRecording"
-        >结束录音</van-button
+      <van-button :disabled="!isRecording" plain type="primary" @click="stopRecording"
+      >结束录音
+      </van-button
       >
       <van-button
-        type="primary"
         :disabled="!audioUrl"
-        round
         icon="guide-o"
+        round
+        type="primary"
         @click="uploadAudio"
       ></van-button>
     </div>
@@ -35,6 +37,7 @@
 import { VoiceRecorder } from 'capacitor-voice-recorder'
 import { closeToast, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import axios from 'axios'
+
 export default {
   name: 'VoiceRecorderComponent',
   data() {
@@ -91,7 +94,7 @@ export default {
           forbidClick: true
         })
         // 修改URL为你的上传接口地址
-        const response = await axios.post('http://127.0.0.1:5000/api/upload', formData, {
+        const response = await axios.post('http://localhost:5000/api/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -105,7 +108,7 @@ export default {
           showFailToast('文件上传失败')
         }
       } catch (error) {
-        console.error('上传出错:', error)
+        console.error('上传出错:', JSON.stringify(error))
         alert('上传出错：' + error.message)
       }
     },
@@ -149,6 +152,7 @@ export default {
   justify-content: space-around;
   text-align: center;
 }
+
 /*.my-swipe .van-swipe-item[data-v-cc12edcf] {*/
 
 /*    line-height: 0px !important;*/
